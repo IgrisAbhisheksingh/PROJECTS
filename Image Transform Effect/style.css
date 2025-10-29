@@ -1,0 +1,162 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #edf2fc;       
+    --secondary-color: #212121;      
+    --accent-color: #ff4321;         
+    --nav-bg: #ffffff;
+    --button-bg: #212121;
+    --button-text: #ffffff;
+}
+
+.dark-theme {
+    --primary-color: #1e1e1e;       
+    --secondary-color: #edf2fc;      
+    --nav-bg: #2a2a2a;
+    --button-bg: #edf2fc;
+    --button-text: #212121;
+}
+
+ 
+.hero {
+    height: 100vh;
+    width: 100%;
+    background: var(--primary-color);
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    transition: background 0.5s, color 0.5s;
+}
+
+/* Navbar */
+nav {
+    width: 84%;
+    margin: auto;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--nav-bg);
+    border-radius: 10px;
+    transition: background 0.5s;
+}
+
+.logo {
+    width: 100px;
+    cursor: pointer;
+}
+
+nav ul li {
+    display: inline-block;
+    list-style: none;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--accent-color);
+}
+
+ 
+#icon {
+    width: 30px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+#icon:hover {
+    transform: rotate(20deg);
+}
+
+
+.info {
+    margin-left: 8%;
+    margin-top: 15%;
+    color: var(--secondary-color);
+}
+
+.info h1 {
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.info span {
+    color: var(--accent-color);
+}
+
+.info p {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.info a {
+    background-color: var(--button-bg);
+    padding: 10px 18px;
+    text-decoration: none;
+    color: var(--button-text);
+    display: inline-block;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+
+.info a:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Social Links */
+.social-links {
+    margin-top: 20px;
+}
+
+.social-links a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-size: 30px;
+    margin-right: 20px;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.social-links a:hover {
+    color: var(--accent-color);
+    transform: scale(1.2);
+}
+
+/* Image box */
+.img-box {
+    width: 45%;
+    height: 80%;
+    position: absolute;
+    bottom: 0;
+    right: 100px;
+}
+
+.img-box img {
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%);
+    transition: bottom 1s, left 1s;
+}
+
+.img-box:hover .back-img {
+    bottom: 40px;
+}
+
+.img-box:hover .main-img {
+    left: 54%;
+}
