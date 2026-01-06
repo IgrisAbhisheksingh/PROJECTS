@@ -75,19 +75,19 @@ const Adminlayout = ({ children }) => {
        
       <style>
         {`
-          /* Hover background blue, text white */
+           
           .custom-menu .ant-menu-item:hover {
             background-color: #1890ff !important;
             color: white !important;
           }
 
-          /* Selected menu item background blue, text white */
+            
           .custom-menu .ant-menu-item-selected {
             background-color: #1890ff !important;
             color: white !important;
           }
 
-          /* Smooth transition */
+           
           .custom-menu .ant-menu-item {
             transition: all 0.3s;
           }
