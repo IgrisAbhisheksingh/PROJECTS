@@ -1,4 +1,8 @@
 import Adminlayout from "../../layout/AdminLayout";
+import { trimData } from "../../../modules/modules";
+import swal from "sweetalert";
+import axios from "axios";
+import { useState, useEffect } from "react"; 
 import { Card, Form, Input, Button, Table } from "antd";
 import {
   EyeInvisibleOutlined,
@@ -6,15 +10,59 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 
+axios.defaults.baseURL = import.meta.env.VITE_BASEURL; 
+
 const { Item } = Form;
 
 const NewEmployee = () => {
+  const [empForm] = Form.useForm();
+  const [loading, setLoading] = useState(false); 
+  const [dataSource, setDataSource] = useState([]); 
 
+  // Fetch employees from backend
+  const fetchEmployees = async () => {
+    try {
+      const { data } = await axios.get("/api/users");
+      setDataSource(data); // assuming backend returns array of employees
+    } catch (err) {
+      console.error(err);
+      swal("Error", "Failed to fetch employees", "error");
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees(); 
+  }, []);
+
+  
+  const onFinish = async (values) => {
+    try {
+      setLoading(true);
+      const finalObj = trimData(values);
+
+      await axios.post("/api/users", finalObj); 
+
+      swal("Success", "Employee Created", "success");
+      empForm.resetFields();
+      fetchEmployees(); // refresh table after adding
+    } catch (err) {
+      if (err?.response?.data?.error?.code === 11000) {
+        empForm.setFields([
+          {
+            name: "email",
+            errors: ["Email Already Exists!"], 
+          },
+        ]);
+      } else {
+        swal("Warning", "Try again later", "warning");
+      }
+    } finally {
+      setLoading(false); 
+    }
+  };
+
+  //  Table columns
   const columns = [
-    {
-      title: "Profile",
-      key: "profile",
-    },
     {
       title: "Fullname",
       dataIndex: "fullname",
@@ -38,7 +86,7 @@ const NewEmployee = () => {
     {
       title: "Action",
       key: "action",
-      render: () => (
+      render: (text, record) => ( 
         <div className="flex gap-1">
           <Button
             type="text"
@@ -60,20 +108,14 @@ const NewEmployee = () => {
     },
   ];
 
-  // Example onFinish handler
-  const onFinish = (values) => {
-    console.log("Form Values:", values);
-  };
-
   return (
     <Adminlayout>
       <div className="grid md:grid-cols-3 gap-3">
 
-        {/* Add New Employee */}
-        <Card title="Add new employee">
-          <Form layout="vertical" onFinish={onFinish}>
-
-            <Item label="Profile" name="profile">
+        {/* Add Employee */}
+        <Card title="Add New Employee">
+          <Form form={empForm} layout="vertical" onFinish={onFinish}>
+            <Item label="Profile">
               <Input type="file" />
             </Item>
 
@@ -89,9 +131,9 @@ const NewEmployee = () => {
               <Item
                 name="mobile"
                 label="Mobile"
-                rules={[{ required: true, message: "Mobile number is required" }]}
+                rules={[{ required: true, message: "Mobile is required" }]}
               >
-                <Input type="number" />
+                <Input />
               </Item>
 
               <Item
@@ -111,32 +153,27 @@ const NewEmployee = () => {
               </Item>
             </div>
 
-            <Item label="Address" name="address">
+            <Item name="address" label="Address">
               <Input.TextArea />
             </Item>
 
-            <Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="!w-full !font-bold"
-              >
-                Submit
-              </Button>
-            </Item>
-
+            <Button
+              loading={loading}  
+              type="primary"
+              htmlType="submit"
+              className="!w-full !font-bold"
+            >
+              Submit
+            </Button>
           </Form>
         </Card>
 
         {/* Employee List */}
-        <Card
-          className="md:col-span-2"
-          title="Employee List"
-        >
+        <Card title="Employee List" className="md:col-span-2">
           <Table
             columns={columns}
-            dataSource={[{},{}]}
-            rowKey="email" // or id if you have unique id
+            dataSource={dataSource} // ✅ now dynamic
+            rowKey="email"
           />
         </Card>
 
