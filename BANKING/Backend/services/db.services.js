@@ -1,32 +1,14 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
-
-const url = process.env.DB_URL;
-
-mongoose
-  .connect(url)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error(err));
-
-const findAllRecord = async (schema) => {
-  return await schema.find();
-};
-
-const createNewRecord = async (data, schema) => {
-  return await new schema(data).save();
-};
-
-const updateRecord = async (id, data, schema) => {
-  return await schema.findByIdAndUpdate(id, data, { new: true });
-};
-
-const deleteRecord = async (id, schema) => {
-  return await schema.findByIdAndDelete(id);
-};
+// Generic Mongoose service functions
+const findAllRecord = async (model) => await model.find().sort({ createdAt: -1 });
+const createNewRecord = async (data, model) => await new model(data).save();
+const findRecordById = async (id, model) => await model.findById(id);
+const updateRecordById = async (id, data, model) => await model.findByIdAndUpdate(id, data, { new: true });
+const deleteRecordById = async (id, model) => await model.findByIdAndDelete(id);
 
 module.exports = {
   findAllRecord,
   createNewRecord,
-  updateRecord,
-  deleteRecord,
+  findRecordById,
+  updateRecordById,
+  deleteRecordById,
 };
