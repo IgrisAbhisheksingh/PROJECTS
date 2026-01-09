@@ -1,64 +1,54 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import {
+  DashboardOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
-  DashboardOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
+import { Link, useLocation } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 
-const Adminlayout = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+const AdminLayout = ({ children }) => {   // ✅ match file name
+  const { pathname } = useLocation();
 
   const items = [
-    { key: '/admin/dashboard', icon: <DashboardOutlined />, label: 'Dashboard' },
-    { key: '/admin/new-employee', icon: <UserOutlined />, label: 'New Employee' },
+    {
+      key: '/admin',
+      icon: <DashboardOutlined />,
+      label: <Link to="/admin">Dashboard</Link>,
+    },
+    {
+      key: '/admin/new-employee',
+      icon: <UserOutlined />,
+      label: <Link to="/admin/new-employee">New Employee</Link>,
+    }
   ];
 
+  const [collapsed, setCollapsed] = useState(false);
+  const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-     
+    <Layout className='!min-h-screen'>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-  
-  <Menu
-    theme="dark"
-    mode="inline"
-    selectedKeys={[location.pathname]}
-    onClick={({ key }) => navigate(key)}
-    items={items}
-    className="custom-menu"
-  />
-</Sider>
-
-
-       
+        <div className="demo-logo-vertical" />
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[pathname]}
+          items={items}
+        />
+      </Sider>
       <Layout>
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
-            style={{ fontSize: 16, width: 64, height: 64 }}
+            style={{ fontSize: '16px', width: 64, height: 64 }}
           />
-          <div style={{ marginLeft: 16, fontWeight: 'bold' }}>Admin</div>
         </Header>
-
         <Content
           style={{
             margin: '24px 16px',
@@ -71,30 +61,8 @@ const Adminlayout = ({ children }) => {
           {children}
         </Content>
       </Layout>
-
-       
-      <style>
-        {`
-           
-          .custom-menu .ant-menu-item:hover {
-            background-color: #1890ff !important;
-            color: white !important;
-          }
-
-            
-          .custom-menu .ant-menu-item-selected {
-            background-color: #1890ff !important;
-            color: white !important;
-          }
-
-           
-          .custom-menu .ant-menu-item {
-            transition: all 0.3s;
-          }
-        `}
-      </style>
     </Layout>
   );
 };
 
-export default Adminlayout;
+export default AdminLayout;

@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
+import { Layout, theme } from 'antd';
 import { Link } from "react-router-dom";
-import { Layout, theme } from "antd";
 
 const { Header, Content } = Layout;
 
@@ -10,32 +10,16 @@ const Homelayout = ({ children }) => {
   } = theme.useToken();
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-    
-      <Header
-        style={{
-          background: colorBgContainer,
-          paddingLeft: 24,
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <Link
-          to="/admin"
-          style={{
-            fontSize: "18px",
-            fontWeight: "bold",
-          }}
-        >
-          Admin
-        </Link>
+    <Layout>
+      <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Link to="/admin">Visit Admin</Link>
       </Header>
 
-     
       <Content
         style={{
-          margin: "24px",
+          margin: '24px 16px',
           padding: 24,
+          minHeight: 280,
           background: colorBgContainer,
           borderRadius: borderRadiusLG,
         }}

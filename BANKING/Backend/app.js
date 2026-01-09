@@ -8,6 +8,7 @@ const cors = require("cors");
 require("./db");
 
 const usersRouter = require("./routes/users.routes");
+const uploadRouter = require("./routes/upload.routes");
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
+app.use("/api/users", usersRouter);
 app.use("/api/users", usersRouter);
 
 // 404 handler
