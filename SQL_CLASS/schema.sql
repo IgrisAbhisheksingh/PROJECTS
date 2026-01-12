@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS test;
+USE test;
+
+CREATE TABLE users (
+  id INT PRIMARY KEY,
+  username VARCHAR(50) UNIQUE,
+  email VARCHAR(50) UNIQUE NOT NULL,
+  password VARCHAR(50) NOT NULL
+);
