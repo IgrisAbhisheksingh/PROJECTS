@@ -13,7 +13,11 @@ mongoose.connect(process.env.DB_URL)
 
  
 import cookieParser from "cookie-parser";
+import cors from "cors";
 app.use(cookieParser());
+app.use(cors({
+    origin: process.env.DOMAIN
+}));
 
 import morgan from "morgan";
 app.use(morgan('dev'));

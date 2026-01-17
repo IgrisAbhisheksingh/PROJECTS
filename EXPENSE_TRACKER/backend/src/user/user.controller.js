@@ -1,34 +1,41 @@
 import Usermodel from "./user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import sendMail from "../utils/mail.js"; 
 
-// ====================== SIGNUP ======================
+
 export const createUser = async (req, res) => {
     try {
         const data = req.body;
-
-        // Hash password once before saving
-        if (data.password) {
-            data.password = await bcrypt.hash(data.password, 10);
-        }
-
-        const user = new Usermodel(data);
+        const user=new Usermodel(data);
         await user.save();
+        res.json(user);
 
-        // Send response without password
-        const { password, ...userWithoutPassword } = user.toObject();
-        res.json(userWithoutPassword);
     }
     catch (err) {
-        // Catch validation errors (like missing fullname/mobile)
-        if (err.name === "ValidationError") {
-            return res.status(400).json({ message: err.message });
-        }
+         
         res.status(500).json({ message: err.message });
     }
 };
 
-// ====================== CREATE JWT ======================
+
+export const sendEmail = async (req, res) => {
+    try {
+        await sendMail(
+            "abhishek930419@gmail.com",
+            "OTP For Signup",
+            "<h1>12345</h1>"
+        );
+        res.json({
+            message: "Email Sended Successfully"
+        });
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+
 const createToken = async (user) => {
     const payload = {
         id: user._id,
@@ -41,7 +48,7 @@ const createToken = async (user) => {
     return token;
 };
 
-// ====================== LOGIN ======================
+
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -50,23 +57,23 @@ export const login = async (req, res) => {
         if (!user)
             return res.status(404).json({ message: "User not Found !" });
 
-        // Compare password correctly
         const isLoged = await bcrypt.compare(password, user.password);
         if (!isLoged)
             return res.status(401).json({ message: "Incorrect password!" });
 
-        // Create token
         const token = await createToken(user);
-
-        // Set cookie
-        res.cookie("authToken", token, {
+         res.cookie("authToken", token, {
             maxAge: 60 * 60 * 24 * 1000,
-            httpOnly: true,
-            secure: process.env.ENVIRONMENT !== "DEV"
+            
+        domain: process.env.ENVIRONMENT === "DEV" ? "localhost" : process.env.DOMAIN,
+
+        secure: process.env.ENVIRONMENT === "DEV" ? false : true,
+        httpOnly: true
         });
 
-        // ✅ Send only message (remove token if you want)
         res.json({ message: "Login successful" });
+
+       
 
     } catch (err) {
         res.status(500).json({ message: err.message });
