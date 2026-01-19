@@ -1,7 +1,7 @@
 import Usermodel from "./user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import sendMail from "../utils/mail.js"; 
+import sendMail from "../utils/mail.js";
 import { otpTemplate } from "../utils/otp.template.js";
 import { generateOTP } from "../utils/generate.otp.js";
 
@@ -10,31 +10,37 @@ import { generateOTP } from "../utils/generate.otp.js";
 export const createUser = async (req, res) => {
     try {
         const data = req.body;
-        const user=new Usermodel(data);
+
+
+        data.password = await bcrypt.hash(data.password, 10);
+
+        const user = new Usermodel(data);
         await user.save();
         res.json(user);
 
-    }
-    catch (err) {
-         
+    } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
 
 
+
 export const sendEmail = async (req, res) => {
     try {
-        const {email} =req.body;
-        const OTP =generateOTP();
+        const { email } = req.body;
+        const OTP = generateOTP();
+        const isEmail = await Usermodel.findOne({ email });
+        if (isEmail)
+            return res.status(400).json({ message: "Email is Already Register" });
 
         await sendMail(
-            email, 
+            email,
             "OTP For Signup",
-                     otpTemplate(OTP)      );
+            otpTemplate(OTP));
         res.json({
             message: "Email Sent Successfully",
             otp: OTP,
-            success : true
+            success: true
 
         });
     }
@@ -70,18 +76,18 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Incorrect password!" });
 
         const token = await createToken(user);
-         res.cookie("authToken", token, {
+        res.cookie("authToken", token, {
             maxAge: 60 * 60 * 24 * 1000,
-            
-        domain: process.env.ENVIRONMENT === "DEV" ? "localhost" : process.env.DOMAIN,
 
-        secure: process.env.ENVIRONMENT === "DEV" ? false : true,
-        httpOnly: true
+            domain: process.env.ENVIRONMENT === "DEV" ? "localhost" : process.env.DOMAIN,
+
+            secure: process.env.ENVIRONMENT === "DEV" ? false : true,
+            httpOnly: true
         });
 
-        res.json({ message: "Login successful" });
+        res.json({ message: "Login successful", role: user.role });
 
-       
+
 
     } catch (err) {
         res.status(500).json({ message: err.message });

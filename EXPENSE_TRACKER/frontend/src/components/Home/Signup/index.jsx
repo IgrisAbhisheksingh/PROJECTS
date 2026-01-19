@@ -4,38 +4,39 @@ import { Link } from "react-router-dom";
 import Homelayout from "../../../layout/Homelayout";
 import axios from "axios";
 import { useState } from "react";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
 
 const { Item } = Form;
 
 const Signup = () => {
-    const[signupForm] =Form.useForm();
+    const [signupForm] = Form.useForm();
 
     const [formData, setFormData] = useState(null);
     const [otp, setOtp] = useState(null);
     const [loading, setLoading] = useState(false);
 
 
-     const onSignup = async (values) => {
+
+
+    const onSignup = async (values) => {
         try {
-            
-            if(Number(values.otp)!==Number(otp))
-            {
-              return toast.error("OTP not Match");
+
+            if (Number(values.otp) !== Number(otp)) {
+                return toast.error("OTP not Match");
             }
             setLoading(true);
-              await axios.post("/api/user/signup", formData);
-              toast.success("Signup sucess");
-              setOtp(null);
+            await axios.post("/api/user/signup", formData);
+            toast.success("Signup sucess");
+            setOtp(null);
             setFormData(null);
             signupForm.resetFields();
-            
+
 
         }
         catch (err) {
-            
+
             toast.error(err.response ? err.response.data.message : err.message)
         }
         finally {
@@ -52,7 +53,9 @@ const Signup = () => {
             setFormData(values);
 
         }
-        catch (error) {
+        catch (err) {
+            toast.error(err.response ? err.response.data.message : err.message)
+
             setOtp(null);
             setFormData(null);
         }
@@ -97,8 +100,8 @@ const Signup = () => {
                                         />
                                     </Item>
 
-                                     
- 
+
+
 
                                     <Item>
                                         <Button

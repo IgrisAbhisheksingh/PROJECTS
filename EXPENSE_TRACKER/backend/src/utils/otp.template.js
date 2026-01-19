@@ -1,6 +1,6 @@
- 
+
 export const otpTemplate = (otp) => {
-    return `
+  return `
     <!DOCTYPE html>
 <html lang="en">
 <head>
