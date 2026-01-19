@@ -3,23 +3,63 @@ import { UserOutlined, LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Homelayout from "../../../layout/Homelayout";
 import axios from "axios";
+import { useState } from "react";
+import {toast} from "react-toastify";
+
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
 
 const { Item } = Form;
 
 const Signup = () => {
-   
+    const[signupForm] =Form.useForm();
 
-    const onFinish = async(values) => {
-        try{
-    const {data} =await axios.post("/api/user/send-mail",values);
-    console.log(data);
-   }
-   catch (error)
-   {
-    console.log(error);
-   }
-        
+    const [formData, setFormData] = useState(null);
+    const [otp, setOtp] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+
+     const onSignup = async (values) => {
+        try {
+            
+            if(Number(values.otp)!==Number(otp))
+            {
+              return toast.error("OTP not Match");
+            }
+            setLoading(true);
+              await axios.post("/api/user/signup", formData);
+              toast.success("Signup sucess");
+              setOtp(null);
+            setFormData(null);
+            signupForm.resetFields();
+            
+
+        }
+        catch (err) {
+            
+            toast.error(err.response ? err.response.data.message : err.message)
+        }
+        finally {
+            setLoading(false);
+        }
+
+    }
+
+    const onFinish = async (values) => {
+        try {
+            setLoading(true);
+            const { data } = await axios.post("/api/user/send-mail", values);
+            setOtp(data.otp);
+            setFormData(values);
+
+        }
+        catch (error) {
+            setOtp(null);
+            setFormData(null);
+        }
+        finally {
+            setLoading(false);
+        }
+
     }
 
 
@@ -40,68 +80,104 @@ const Signup = () => {
                             Track Expense
                         </h2>
 
-                        <Form name="signup-form" layout="vertical"
-                        onFinish={onFinish}
+                        {
+                            otp ?
+                                <Form name="otp-form" layout="vertical"
+                                    onFinish={onSignup}
 
-                        >
-                            <Item
-                                name="fullname"
-                                label="Fullname"
-                                rules={[{ required: true, message: "Please enter fullname" }]}
-                            >
-                                <Input
-                                    prefix={<UserOutlined />}
-                                    placeholder="Enter your Fullname"
-                                />
-                            </Item>
-
-                            <Item
-                                name="mobile"
-                                label="Mobile"
-                                rules={[{ required: true, message: "Please enter mobile number" }]}
-                            >
-                                <Input
-                                    prefix={<PhoneOutlined />}
-                                    placeholder="Enter your Mobile Number"
-                                />
-                            </Item>
-
-                            <Item
-                                name="email"
-                                label="Username"
-                                rules={[{ required: true, message: "Please enter username" }]}
-                            >
-                                <Input
-                                    prefix={<UserOutlined />}
-                                    placeholder="Enter your Username"
-                                />
-                            </Item>
-
-                            <Item
-                                name="password"
-                                label="Password"
-                                rules={[{ required: true, message: "Please enter password" }]}
-                            >
-                                <Input.Password
-                                    prefix={<LockOutlined />}
-                                    placeholder="Enter your Password"
-                                />
-                            </Item>
-
-                            <Item>
-                                <Button
-                                    type="text"
-                                    htmlType="submit"
-                                    block
-                                    className="!bg-[#FF735C] !text-white !font-bold"
                                 >
-                                    Sign Up
-                                </Button>
-                            </Item>
-                        </Form>
+                                    <Item
+                                        name="otp"
+                                        label="OTP"
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Input.OTP
+                                            prefix={<UserOutlined />}
+                                            placeholder="Enter your Fullname"
+                                        />
+                                    </Item>
+
+                                     
+ 
+
+                                    <Item>
+                                        <Button
+                                            loading={loading}
+                                            type="text"
+                                            htmlType="submit"
+                                            block
+                                            className="!bg-[#FF735C] !text-white !font-bold"
+                                        >
+                                            Verify Now
+                                        </Button>
+                                    </Item>
+                                </Form>
+                                :
+                                <Form name="signup-form" layout="vertical"
+                                    onFinish={onFinish}
+                                    form={signupForm}
+
+                                >
+                                    <Item
+                                        name="fullname"
+                                        label="Fullname"
+                                        rules={[{ required: true, message: "Please enter fullname" }]}
+                                    >
+                                        <Input
+                                            prefix={<UserOutlined />}
+                                            placeholder="Enter your Fullname"
+                                        />
+                                    </Item>
+
+                                    <Item
+                                        name="mobile"
+                                        label="Mobile"
+                                        rules={[{ required: true, message: "Please enter mobile number" }]}
+                                    >
+                                        <Input
+                                            prefix={<PhoneOutlined />}
+                                            placeholder="Enter your Mobile Number"
+                                        />
+                                    </Item>
+
+                                    <Item
+                                        name="email"
+                                        label="Username"
+                                        rules={[{ required: true, message: "Please enter username" }]}
+                                    >
+                                        <Input
+                                            prefix={<UserOutlined />}
+                                            placeholder="Enter your Username"
+                                        />
+                                    </Item>
+
+                                    <Item
+                                        name="password"
+                                        label="Password"
+                                        rules={[{ required: true, message: "Please enter password" }]}
+                                    >
+                                        <Input.Password
+                                            prefix={<LockOutlined />}
+                                            placeholder="Enter your Password"
+                                        />
+                                    </Item>
+
+                                    <Item>
+                                        <Button
+                                            loading={loading}
+                                            type="text"
+                                            htmlType="submit"
+                                            block
+                                            className="!bg-[#FF735C] !text-white !font-bold"
+                                        >
+                                            Sign Up
+                                        </Button>
+                                    </Item>
+                                </Form>
+                        }
 
                         <div className="flex items-center justify-between">
-                           <div></div>
+                            <div></div>
 
                             <Link
                                 style={{ textDecoration: "underline" }}
