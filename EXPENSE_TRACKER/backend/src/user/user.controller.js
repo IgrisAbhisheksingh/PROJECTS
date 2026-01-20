@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import sendMail from "../utils/mail.js";
 import { otpTemplate } from "../utils/otp.template.js";
 import { generateOTP } from "../utils/generate.otp.js";
+import { forgotPasswordTemplate } from "../utils/forgot.template.js";
 
 
 
@@ -93,3 +94,57 @@ export const login = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await Usermodel.findOne({ email });
+    if (!user)
+      return res.status(404).json({ message: "User does not exist" });
+
+    const token = jwt.sign(
+      { id:user._id },
+      process.env.FORGOT_TOKEN_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    const link = `${process.env.DOMAIN}/forgot-password? token=${token}`;
+
+    const sent= await sendMail(
+      email,
+      "Expense - Forgot Password ?", 
+      forgotPasswordTemplate(user.fullname, link)
+    );
+    if(!sent)
+       return res.status(424).json({message: 'Email Sending failed !'})
+    res.json({ message: "Please check your email to reset password" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const verifyToken = async (req, res) => {
+  try {
+    res.json("Verification success");
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+
+    const encrypted = await bcrypt.hash(password.toString(), 12);
+
+   await Usermodel.findByIdAndUpdate(req.user.id, { password: encrypted });
+
+    res.json("Password changed successfully");
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+

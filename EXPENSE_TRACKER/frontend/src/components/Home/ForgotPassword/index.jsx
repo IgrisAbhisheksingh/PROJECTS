@@ -1,7 +1,7 @@
 import { Card, Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import axios from "axios";
@@ -14,6 +14,10 @@ const { Item } = Form;
 const ForgotPassword = () => {
 
     const navigate = useNavigate();
+    const [params] = useSearchParams();
+
+
+
 
     const [forgotForm] = Form.useForm();
     const [rePasswordForm] = Form.useForm();
@@ -22,15 +26,66 @@ const ForgotPassword = () => {
     const [loading, setLoading] = useState(false);
     const [token, setToken] = useState(null);
 
+    useEffect(() => {
+        const tok = params.get("token");
+        if (tok) {
+            checkToken(tok);
+        }
+        else {
+            setToken(null);
+        }
+
+    }, [params]);
+
+    const checkToken = async (tok) => {
+        try {
+            await axios.post("/api/user/verify-token", {}, {
+                headers: {
+                    Authorization: `Bearer ${tok}`
+                }
+            });
+            setToken(tok);
+
+        }
+        catch (err) {
+            setToken(null);
+
+        }
+    }
+
+
     const onFinish = async (values) => {
         try {
             setLoading(true);
-            const { data } = await axios.post("/api/user/login", values);
-            const { role } = data;
-            if (role === "admin")
-                return toast.success("Admin try to login");
-            if (role === "user")
-                return navigate("/app/user");
+            await axios.post("/api/user/forgot-password", values);
+            toast.success("Please check your email to forgot password");
+
+        } catch (err) {
+            toast.error(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onChangePassword = async (values) => {
+        try {
+            if(values.password !== values.rePassword)
+                return toast.warning("Password & re paaword not matched ");
+
+
+            setLoading(true);
+            await axios.put("/api/user/change-password", values,
+                {
+                    headers: {
+                        Authorization: `Bearer ${params.get("token")}`
+                    }
+                }
+            );
+            toast.success("Password updated successfully, please wait....",);
+            setTimeout(() =>{
+                navigate("/")
+            },3000);
+
         } catch (err) {
             toast.error(err.response ? err.response.data.message : err.message);
         } finally {
@@ -52,14 +107,19 @@ const ForgotPassword = () => {
                 <div className="w-full md:w-1/2 flex items-center justify-center p-2 md:p-6 bg-white">
                     <Card className="w-full max-w-sm shadow-xl">
                         <h2 className="font-bold text-[#FF735C] text-2xl text-center mb-6">
-                            Forgot Password
+                            {
+                                token ?
+                                    "Change Password"
+                                    :
+                                    "Forgot Password"
+                            }
                         </h2>
                         {
                             token ?
                                 <Form
                                     name="login-form"
                                     layout="vertical"
-                                    onFinish={onFinish}
+                                    onFinish={onChangePassword}
                                     form={rePasswordForm}
                                 >
                                     <Item
@@ -74,7 +134,7 @@ const ForgotPassword = () => {
                                     </Item>
 
                                     <Item
-                                        name="re-password"
+                                        name="rePassword"
                                         label="Re Enter Password"
                                         rules={[{ required: true, message: "Please enter password" }]}
                                     >
