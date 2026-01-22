@@ -1,3 +1,5 @@
+
+
 import Usermodel from "./user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -76,14 +78,19 @@ export const login = async (req, res) => {
         if (!isLoged)
             return res.status(401).json({ message: "Incorrect password!" });
 
+
+
         const token = await createToken(user);
         res.cookie("authToken", token, {
-            maxAge: 60 * 60 * 24 * 1000,
+          
+          httpOnly: true,
+          secure:process.env.ENVIROMENT !=="DEV",
+          sameSite:process.env.ENVIROMENT==="DEV" ? "lax" :"none",
+          path:"/",
+          domain:"undefined",
+          maxAge:86400000,
 
-            domain: process.env.ENVIRONMENT === "DEV" ? "localhost" : process.env.DOMAIN,
-
-            secure: process.env.ENVIRONMENT === "DEV" ? false : true,
-            httpOnly: true
+        
         });
 
         res.json({ message: "Login successful", role: user.role });
@@ -104,20 +111,19 @@ export const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: "User does not exist" });
 
     const token = jwt.sign(
-      { id:user._id },
+      { id: user._id },
       process.env.FORGOT_TOKEN_SECRET,
       { expiresIn: "15m" }
     );
 
-    const link = `${process.env.DOMAIN}/forgot-password? token=${token}`;
+    const link = `${process.env.DOMAIN}/forgot-password?token=${token}`;
 
-    const sent= await sendMail(
+    await sendMail(
       email,
-      "Expense - Forgot Password ?", 
+      "Expensen - Forgot Password",
       forgotPasswordTemplate(user.fullname, link)
     );
-    if(!sent)
-       return res.status(424).json({message: 'Email Sending failed !'})
+
     res.json({ message: "Please check your email to reset password" });
 
   } catch (err) {
@@ -146,5 +152,3 @@ export const changePassword = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-

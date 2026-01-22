@@ -4,21 +4,22 @@ export const verifyTokenGuard = async (req, res, next) => {
   
         const authorization = req.headers['authorization'];
 
-        if (!authorization) 
+        if (!authorization) {
             return res.status(400).send({ message: "Bad Request" });
-        
+        }
 
         const [type, token] = authorization.split(" ");
 
-        if (type !== "Bearer") 
+        if (type !== "Bearer") {
             return res.status(400).send({ message: "Bad Request " });
-        
+        }
 
-        const payload = await jwt.verify(token,process.env.FORGOT_TOKEN_SECRET);
+        const payload = await jwt.verify(token, process.env.FORGOT_TOKEN_SECRET);
 
         
         req.user = payload;
 
         next();
-     }  
+    }  
+
 
