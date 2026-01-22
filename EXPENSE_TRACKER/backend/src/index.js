@@ -16,7 +16,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.DOMAIN
+    origin: process.env.DOMAIN || "*",
+    credentials:true,
 }));
 
 import morgan from "morgan";

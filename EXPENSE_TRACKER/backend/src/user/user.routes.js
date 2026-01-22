@@ -11,7 +11,7 @@ import {
   changePassword,
   verifyToken
 } from "./user.controller.js";
-import { verifyTokenGuard } from "../middleware/guard.middleware.js";
+import { AdminUserGuard, verifyTokenGuard } from "../middleware/guard.middleware.js";
 
 const userRouter = Router();
 
@@ -27,10 +27,28 @@ userRouter.post("/send-mail", sendEmail);
 // @POST /api/user/forgot-password
 userRouter.post("/forgot-password", forgotPassword);
 
+
+//@Get /api/user/session
+userRouter.get(
+  "/session",
+  AdminUserGuard,
+  (req, res) => {
+    return res.json({
+      message: "success"
+        
+    });
+  }
+);
+
 // @POST /api/user/verify-token
 userRouter.post("/verify-token", verifyTokenGuard, verifyToken);
 
 // @PUT /api/user/change-password
 userRouter.put("/change-password", verifyTokenGuard, changePassword);
+
+
+ 
+
+
 
 export default userRouter;

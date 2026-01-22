@@ -22,4 +22,8 @@ export const verifyTokenGuard = async (req, res, next) => {
         next();
     }  
 
+    export const AdminUserGuard = async (req, res, next) => {
+
+        next();
+    }  
 

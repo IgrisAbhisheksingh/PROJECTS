@@ -5,6 +5,8 @@ import { ToastContainer } from 'react-toastify';
 import PageNotFound from "./components/Pagenotfound";
 import Userlayout from "./components/User/Userlayout";
 import ForgotPassword from "./components/Home/ForgotPassword";
+import Dashboard from "./components/User/Dashboard";
+import Report from "./components/User/Report";
 
 const App = () => {
   return (
@@ -13,7 +15,10 @@ const App = () => {
         <Route path="/" element={<Homepage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/app/user" element={<Userlayout />}></Route>
+        <Route path="/app/user" element={<Userlayout />}>
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="report" element={<Report />} />
+        </Route>
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
       <ToastContainer />
