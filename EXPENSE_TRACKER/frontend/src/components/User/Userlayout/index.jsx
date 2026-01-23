@@ -38,7 +38,7 @@ const Userlayout = () => {
 
 
   const {data:session ,error,isLoading} = useSWR(
-    "api/user/session",
+    "/api/user/session",
     fetcher
   )
   console.log(session,error,isLoading)

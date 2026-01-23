@@ -21,31 +21,23 @@ export const verifyTokenGuard = async (req, res, next) => {
 };  
 
 const invalid = async (res) => {
-    res.cookie('authToken', null, {
-        httpOnly: true,
-        secure: process.env.ENVIRONMENT !== "DEV",
-        sameSite: process.env.ENVIRONMENT === "DEV" ? "lax" : "none",
-        path: "/",
-        domain: undefined,
-        maxAge: 0,
-    });
-
-    
-    return res.status(401).json({ message: "Unauthorized" });
+  res.cookie('authToken', null, {
+    httpOnly: true,
+    secure: process.env.ENVIRONMENT !== "DEV",
+    sameSite: process.env.ENVIRONMENT === "DEV" ? "lax" : "none",
+    path: "/",
+    maxAge: 0,
+  });
+  return res.status(401).json({ message: "Unauthorized" });
 };
 
 export const AdminUserGuard = async (req, res, next) => {
-    const { authToken } = req.cookies;
+  const { authToken } = req.cookies;
+  if (!authToken) return invalid(res);
 
-    if (!authToken)
-        return invalid(res);
+  const payload = await jwt.verify(authToken, process.env.AUTH_SECRET);
+  if (payload.role !== "user" && payload.role !== "admin") return invalid(res);
 
-     
-    const payload = await jwt.verify(authToken, process.env.AUTH_SECRET);
-
-    if (payload.role !== "user" && payload.role !== "admin")
-        return invalid(res);
-
-    req.user = payload;
-    next();
+  req.user = payload;
+  next();
 };
