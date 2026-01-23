@@ -33,10 +33,10 @@ userRouter.get(
   "/session",
   AdminUserGuard,
   (req, res) => {
-    return res.json({
-      message: "success"
+    return res.json(
+      req.user
         
-    });
+    );
   }
 );
 
