@@ -25,7 +25,7 @@ const Home = () => {
           ) : (
             <>
               <h1 className="text-3xl xl:text-5xl font-bold text-primary">
-                Welcome to DayBook
+                Welcome to Penora
               </h1>
               <p className="text-lg mt-4">
                 Hey! Great to have you here 😊 Log in to keep your entries safe,
