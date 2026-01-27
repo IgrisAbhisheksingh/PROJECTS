@@ -47,7 +47,7 @@ const Signup = () => {
     <div className="min-h-[calc(100svh-64px-52px-40px)]">
       <div className="my-10">
         <p className="text-lg font-semibold text-center">
-          Create your DayBook account
+          Create your Penora account
         </p>
         <p className="text-lg font-semibold text-center">
           and stay organized effortlessly.
