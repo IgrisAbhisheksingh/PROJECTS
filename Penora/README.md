@@ -1,10 +1,9 @@
-# DayBook
+# Penora
 
-DayBook is a secure and user-friendly personal journaling app built with the MERN stack (MongoDB, Express, React, and Node.js). It allows users to easily log in, write, view, and manage their daily entries while ensuring a seamless, distraction-free, and private experience. Prioritizing simplicity, security, and privacy, DayBook helps you document your thoughts and memories with confidence and peace of mind.
+Penora is a secure and user-friendly personal journaling app built with the MERN stack (MongoDB, Express, React, and Node.js). It allows users to easily log in, write, view, and manage their daily entries while ensuring a seamless, distraction-free, and private experience. Prioritizing simplicity, security, and privacy, DayBook helps you document your thoughts and memories with confidence and peace of mind.
 
-[Live Demo](https://daybook-mern.vercel.app)
-
-Head over to the [Vercel deployment branch](https://github.com/thenileshnishad/daybook/tree/deployment) if you want to see how the deployment is set up (you can find the relevant details in their `package.json` file).
+ 
+ 
 
 ---
 
@@ -165,8 +164,8 @@ Follow these steps to set up the project locally:
 
    ```env
    PORT=3000
-   MONGO_URI=mongodb://localhost:27017/daybook
-   JWT_SECRET=rushB@5678
+   MONGO_URI=mongodb://localhost:27017/Penora
+   JWT_SECRET=yourjwt
    FRONTEND_URL=http://localhost:5173
    ```
 
@@ -213,46 +212,4 @@ The app should now be running locally. `By default`:
 
 ---
 
-## 5. API Endpoints
-
-| **Method** | **Endpoint**                | **Description**                                                                                                                                                                                          |
-| :--------- | :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| POST       | `/api/auth/signup`          | Registers a new user by saving their email and hashed password to the MongoDB database. After that a JWT token is returned and stored in an HTTP-only secured cookie, automatically logging the user in. |
-| POST       | `/api/auth/login`           | Authenticates the user with their provided credentials (email and password). If successful, a JWT token is returned and stored in an HTTP-only secured cookie, providing access to protected resources.  |
-| POST       | `/api/auth/logout`          | Logs out the user by setting the JWT token stored in the HTTP-only cookie as null and setting its expiration now, effectively invalidating the user's token cookie.                                      |
-| GET        | `/api/users/me`             | Retrieves the current user's information (email, first name, last name) based on the authenticated session. This request requires the user to be logged in.                                              |
-| PUT        | `/api/users/me`             | Allows the logged-in user to update their personal details, such as first name, last name, while keeping the rest of their account intact.                                                               |
-| PUT        | `/api/auth/change-password` | Enables the user to change their password. The request requires both the old password (for verification) and the new password, updating the password in the database after successful verification.      |
-| POST       | `/api/entries`              | Adds a new entry to the database. The request body must include the necessary details for the entry (date, title, mood, content). Only authenticated users can add entries.                              |
-| GET        | `/api/entries`              | Retrieves all entries stored in the database. This is typically used by the user to view a list of all their entries. Requires the user to be authenticated.                                             |
-| GET        | `/api/entries/:id`          | Retrieves a specific entry based on its unique ID. The ID should be passed as a parameter in the URL, and only the entry corresponding to that ID will be returned.                                      |
-| PATCH      | `/api/entries/:id`          | Updates an existing entry specified by its ID. The request body must include the fields that need to be updated (date, title, mood, content). Only the owner of the entry can modify and see it.         |
-| DELETE     | `/api/entries/:id`          | Deletes the entry specified by its ID. Only the user who created the entry is authorized to delete or see it. The entry will be permanently removed from the database.                                   |
-| GET        | `/api/entries/search?text=` | Searches for entries that match the given search text in either the title or the description. The search query parameter text should contain the keyword(s) you want to search for.                      |
-
----
-
-## 6. Contributing
-
-Contributions are welcome! If you'd like to improve DayBook, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch:
-
-   ```bash
-   git checkout -b feature/YourFeature
-   ```
-
-3. Commit your changes:
-
-   ```bash
-   git commit -m "Add some feature"
-   ```
-
-4. Push to the branch:
-
-   ```bash
-   git push origin feature/YourFeature
-   ```
-
-5. Open a pull request detailing your changes.
+ 
