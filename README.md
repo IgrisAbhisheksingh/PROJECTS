@@ -1,2 +1,2 @@
 # PROJECTS
-Learing and creating Projects
+Learing and creating Projects.
