@@ -1,4 +1,3 @@
 # PROJECTS
-Learing and creating new Projects.
-I love to create Projects.
+Learing and creating new Projects.Creating projects give me so much fun.
 
