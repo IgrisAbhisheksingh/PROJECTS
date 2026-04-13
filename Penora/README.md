@@ -1,6 +1,6 @@
 # Penora
 
-Penora is a secure and user-friendly personal journaling app built with the MERN stack (MongoDB, Express, React, and Node.js). It allows users to easily log in, write, view, and manage their daily entries while ensuring a seamless, distraction-free, and private experience. Prioritizing simplicity, security, and privacy, DayBook helps you document your thoughts and memories with confidence and peace of mind.
+Penora is a secure and user-friendly personal journaling app built with the MERN stack (MongoDB, Express, React, and Node.js). It allows users to easily log in, write, view, and manage their daily entries while ensuring a seamless, distraction-free, and private experience. Prioritizing simplicity, security,and privacy,Penora helps you document your thoughts and memories with confidence and peace of mind.
 
  
  
@@ -164,7 +164,7 @@ Follow these steps to set up the project locally:
 
    ```env
    PORT=3000
-   MONGO_URI=mongodb://localhost:27017/Penora
+   MONGO_URI=mongodb:your
    JWT_SECRET=yourjwt
    FRONTEND_URL=http://localhost:5173
    ```
