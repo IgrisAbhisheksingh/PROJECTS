@@ -9,7 +9,7 @@ import Notes from './pages/Notes'
 import Pricing from './pages/Pricing'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFailed from './pages/PaymentFailed'
-export const serverUrl = "https://examnotesaiserver-4q01.onrender.com"
+export const serverUrl = "https://examnotesaiserver-dc6h.onrender.com"
 
 function App() {
   const dispatch = useDispatch()
