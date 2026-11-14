@@ -1,2 +1,3 @@
 # PROJECTS
-Learnings and creating new Projects. Creating projects give me so much fun. So i start creating Projects.
+
+Learning new things and creating projects are things I enjoy a lot. Creating projects gives me so much joy and motivates me to keep learning. That's why I started building projects.
